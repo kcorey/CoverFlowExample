@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="image_space_height">200dp</dimen>
+    <dimen name="pager_width">250dp</dimen>
+    <dimen name="pager_height">200dp</dimen>
+    <dimen name="pager_instance_height">150dp</dimen>
+</resources>
