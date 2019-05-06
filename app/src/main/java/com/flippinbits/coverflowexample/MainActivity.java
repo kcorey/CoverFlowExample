@@ -14,10 +14,7 @@ import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final float PREVIEW_PERCENTAGE = 0.2f;
-    private static final float GAP_WIDTH_PERCENTAGE = 0.1f;
     private static final float FULL_MAGNIFICATION_FACTOR = 1.15f;
-    private static final float SCROLL_WIDTH_PERCENTAGE = 0.85f;
 
     private ViewPager coverflow;
     private ImagesAdapter imgsAdapter;
@@ -44,11 +41,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupCoverFlow() {
-        coverflow.getViewTreeObserver().addOnGlobalLayoutListener(new ImgsLayoutListener());
         imgsAdapter = new ImagesAdapter();
         transformer = new ImgsPagerTransformer(0,40,1.0f,0);
         coverflow.setAdapter(imgsAdapter);
         coverflow.setPageTransformer(false,transformer);
+
+        coverflow.setPageMargin(25);
+
+        coverflow.setOffscreenPageLimit(8);
     }
 
 
@@ -63,11 +63,6 @@ public class MainActivity extends AppCompatActivity {
             return view == o;
         }
 
-        @Override
-        public float getPageWidth(int position) {
-            return SCROLL_WIDTH_PERCENTAGE;
-        }
-
         @NonNull
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
@@ -77,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
             ImageView image = layout.findViewById(R.id.image_view);
             Drawable drawable = getResources().getDrawable(demoImages[position]);
             image.setImageDrawable(drawable);
-//            image.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             container.addView(layout);
             return layout;
@@ -117,17 +111,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class ImgsLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
-        @Override
-        public void onGlobalLayout() {
-            float density = getResources().getDisplayMetrics().density;
-            float width = coverflow.getWidth() / density;
-            int partialwidth = (int)(PREVIEW_PERCENTAGE * width * density);
-            int pageMargin = (int)(GAP_WIDTH_PERCENTAGE * width);
-            int viewPagerPadding = partialwidth + pageMargin;
-
-            coverflow.setPageMargin(pageMargin);
-            coverflow.setPadding(viewPagerPadding,0,viewPagerPadding,0);
-        }
-    }
 }
